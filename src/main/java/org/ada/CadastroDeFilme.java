@@ -3,6 +3,7 @@ package org.ada;
 
 import org.ada.dto.Filme;
 import org.ada.map.Mapa;
+import org.ada.sort_collections.Ordenacao;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CadastroDeFilme {
-    private int ultimoIdFuncionario = 0;
+    private int ultimoIdFilme = 0;
     private List<Filme> listaDeFilmes = new LinkedList<>();
     private Mapa<Integer, Filme> mapaIdFilme = new Mapa<>();
     private Mapa<String, Filme> mapaFilmePorNome = new Mapa<>();
@@ -23,6 +24,8 @@ public class CadastroDeFilme {
     private final String OPCAO_CADASTRAR_EM_LOTE = "3";
     private final String OPCAO_BUSCA_POR_ID = "4";
     private final String OPCAO_BUSCA_POR_TITLE = "5";
+
+    private final String OPCAO_ORDENACAO = "6";
 
     public CadastroDeFilme(EntradaDeDados leitor){
         this.leitor = leitor;
@@ -47,7 +50,7 @@ public class CadastroDeFilme {
             case OPCAO_SAIR:
                 break;
             case OPCAO_CADASTRAR_FILME:
-                this.inserirFilme(construirFilme(++ultimoIdFuncionario, leitor));
+                this.inserirFilme(construirFilme(++ultimoIdFilme, leitor));
                 System.out.println("Cadastro realizado com sucesso!");
                 pularLinha(2);
                 break;
@@ -63,6 +66,9 @@ public class CadastroDeFilme {
                 break;
             case OPCAO_BUSCA_POR_TITLE:
                 buscaPorTitleHashMap();
+                break;
+            case OPCAO_ORDENACAO:
+                classificar();
                 break;
             default:
                 opcaoInvalida();
@@ -81,7 +87,19 @@ public class CadastroDeFilme {
         this.inserirFilme(removerDuplicados(novosFilmes));
 
     }
+    private void classificar(){
+        System.out.print("Classificando: ");
+        // Criar uma instância da classe Ordenacao
+        Ordenacao<Filme> ordenacao = new Ordenacao<>();
 
+        List<Filme> listaOrdenada = ordenacao.classificar(this.listaDeFilmes);
+
+        // Imprimir a lista ordenada
+        for (Filme filme : listaOrdenada) {
+            System.out.println(filme);
+        }
+
+    }
     private void inserirFilme(List<Filme> filmes){
         for (Filme filme: filmes){
             inserirFilme(filme);
@@ -201,6 +219,7 @@ public class CadastroDeFilme {
         System.out.println("3 - CADASTRO EM LOTE (CSV)");
         System.out.println("4 - PESQUISAR POR ID");
         System.out.println("5 - PESQUISAR POR TITULO");
+        System.out.println("6 - ORDERNAR LISTA");
         System.out.println("X - SAIR");
     }
 
